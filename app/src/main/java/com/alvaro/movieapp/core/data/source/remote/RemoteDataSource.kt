@@ -40,7 +40,7 @@ class RemoteDataSource @Inject constructor(
         page: Int
     ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getNowPlayingMovies() },
+            apiCall = { apiService.getNowPlayingMovies(page) },
             transform = { it.results }
         )
     }
@@ -50,7 +50,7 @@ class RemoteDataSource @Inject constructor(
         page: Int
     ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getPopularMovies() },
+            apiCall = { apiService.getPopularMovies(page) },
             transform = { it.results }
         )
     }
@@ -59,7 +59,7 @@ class RemoteDataSource @Inject constructor(
         page: Int
     ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getTopRatedMovies() },
+            apiCall = { apiService.getTopRatedMovies(page) },
             transform = { it.results }
         )
     }
@@ -68,14 +68,14 @@ class RemoteDataSource @Inject constructor(
         page: Int
     ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getUpcomingMovies() },
+            apiCall = { apiService.getUpcomingMovies(page) },
             transform = { it.results }
         )
     }
 
-    suspend fun getSearchResult(query: String): Flow<Resource<List<MovieItem>>> {
+    suspend fun getSearchResult(query: String, page: Int): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getSearchResult(query) },
+            apiCall = { apiService.getSearchResult(query, page) },
             transform = { it.results }
         )
     }

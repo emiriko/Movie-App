@@ -29,18 +29,6 @@ class MovieRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ): IMovieRepository {
-    private suspend fun insertMovieToDatabase(data: List<MovieItem>) {
-        val currentMovies = localDataSource.getAllMovies().first()
-        val movies = DataMapper.movieResponsesToMovieEntity(data)
-
-        movies.forEach { movie ->
-            val currentMovie = currentMovies.find { it.movieId == movie.movieId }
-            movie.isFavorite = currentMovie?.isFavorite ?: false
-        }
-
-        localDataSource.insertMovies(movies)
-    }
-    
     private suspend fun getMovies(
         createCall: suspend () -> Flow<Resource<List<MovieItem>>>,
         saveCallResult: suspend (List<MovieItem>) -> Unit,
@@ -194,17 +182,11 @@ class MovieRepository @Inject constructor(
         }
     }
 
-    override suspend fun getSearchResult(query: String): Flow<Resource<List<Movie>>> = flow { 
-        emit(Resource.Loading())
-        // Don't have to try and except because already from remoteDataSource
-        val result = remoteDataSource.getSearchResult(query).first()
-        if (result is Resource.Success) {
-            val data = result.data
-            val dataEntities = DataMapper.movieResponsesToMovieEntity(data)
-            emit(Resource.Success(DataMapper.movieEntitiesToMovieDomain(dataEntities)))
-        } else {
-            emit(Resource.Error("An error occurred"))
-        }
+    override suspend fun getSearchResult(query: String): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.SEARCH, query) }
+        ).flow
     }
     
     override suspend fun updateMovieState(movie: Movie, newState: Boolean) {

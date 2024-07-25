@@ -215,6 +215,14 @@ fun MoviesHighlightLayout(
                         onRetryClick = onClick
                     )
                 }
+            },
+            loadingAppendContent = {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    LoadingIndicator(
+                        modifier = Modifier
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                    )
+                }
             }
         )
     }

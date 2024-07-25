@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import com.alvaro.movieapp.core.presentation.state.Resource
 
 @Composable
@@ -32,7 +33,8 @@ fun <T> ResourceHandler(
             contentAlignment = Alignment.Center
         ) {
             ErrorIndicator(
-                message = error
+                message = error,
+                textAlign = TextAlign.Center
             )
         }
     }

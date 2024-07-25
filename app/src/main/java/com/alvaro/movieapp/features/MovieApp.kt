@@ -26,7 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.alvaro.movieapp.core.presentation.state.Resource
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.alvaro.movieapp.features.detail.DetailScreen
 import com.alvaro.movieapp.features.detail.DetailViewModel
 import com.alvaro.movieapp.features.favorite.FavoriteScreen
@@ -41,7 +41,6 @@ import com.alvaro.movieapp.features.ui.navigation.ProvideAppBarTitle
 import com.alvaro.movieapp.features.ui.navigation.Route
 import com.alvaro.movieapp.features.ui.navigation.Screen
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
-import com.alvaro.movieapp.utils.Helper
 
 @Composable
 fun MovieApp(
@@ -115,9 +114,7 @@ fun MovieApp(
                 val searchViewModel: SearchViewModel = hiltViewModel()
                 
                 val searchInput by searchViewModel.searchInput.collectAsState()
-                val searchState by searchViewModel.results.collectAsState(initial = Resource.Success(
-                    emptyList()
-                ))
+                val searchState = searchViewModel.results.collectAsLazyPagingItems()
                 
                 SearchScreen(
                     state = searchState,

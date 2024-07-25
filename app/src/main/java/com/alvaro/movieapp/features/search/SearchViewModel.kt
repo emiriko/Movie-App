@@ -3,6 +3,8 @@ package com.alvaro.movieapp.features.search
 import androidx.compose.material3.TextField
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,12 +28,10 @@ class SearchViewModel @Inject constructor(
     val results = _searchInput
         .debounce(300L)
         .distinctUntilChanged()
-        .filter {
-            it.text.trim().isNotEmpty()
-        }
         .flatMapLatest { 
             movieUseCase.getSearchResult(it.text.trim())
         }
+        .cachedIn(viewModelScope)
 
     fun updateSearchQuery(query: TextFieldValue) {
         _searchInput.value = query

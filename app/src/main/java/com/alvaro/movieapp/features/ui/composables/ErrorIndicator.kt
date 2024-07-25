@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ fun ErrorIndicator(
     message: String,
     onRetryClick: () -> Unit = {},
     retriable: Boolean = false,
+    textAlign: TextAlign = TextAlign.Left,
     modifier: Modifier = Modifier,
     ) {
     Column (
@@ -42,11 +44,13 @@ fun ErrorIndicator(
             ), 
             contentDescription = "Error Icon",
             tint = MaterialTheme.colorScheme.errorContainer,
+            modifier = Modifier.size(40.dp)
         )
         Text(
             text = message,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.errorContainer
+            color = MaterialTheme.colorScheme.errorContainer,
+            textAlign = textAlign,
         )
         if (retriable) {
             OutlinedButton(

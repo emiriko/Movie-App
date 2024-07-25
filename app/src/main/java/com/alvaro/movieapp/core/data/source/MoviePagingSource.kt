@@ -7,10 +7,13 @@ import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.presentation.state.Resource
 import com.alvaro.movieapp.core.utils.DataMapper
 import kotlinx.coroutines.flow.first
+import retrofit2.HttpException
+import java.io.IOException
 
 class MoviePagingSource(
     private val remoteDataSource: RemoteDataSource,
-    private val queryType: QueryType
+    private val queryType: QueryType,
+    private val query: String? = null
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -21,7 +24,8 @@ class MoviePagingSource(
                 QueryType.POPULAR -> remoteDataSource.getPopularMovies(page)
                 QueryType.TOP_RATED -> remoteDataSource.getTopRatedMovies(page)
                 QueryType.UPCOMING -> remoteDataSource.getUpcomingMovies(page)
-            }.first()
+                QueryType.SEARCH -> query?.let { remoteDataSource.getSearchResult(it, page) }
+            }?.first()
 
             if (response is Resource.Success) {
                 val movies = response.data
@@ -34,6 +38,10 @@ class MoviePagingSource(
             } else {
                 LoadResult.Error(Throwable("Error fetching movies"))
             }
+        } catch (e: HttpException) {
+            LoadResult.Error(e)
+        } catch (e: IOException) {
+            LoadResult.Error(e)
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
@@ -48,5 +56,5 @@ class MoviePagingSource(
 }
 
 enum class QueryType {
-    NOW_PLAYING, POPULAR, TOP_RATED, UPCOMING
+    NOW_PLAYING, POPULAR, TOP_RATED, UPCOMING, SEARCH
 }

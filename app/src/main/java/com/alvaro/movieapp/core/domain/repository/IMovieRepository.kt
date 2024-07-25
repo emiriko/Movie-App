@@ -14,6 +14,6 @@ interface IMovieRepository {
     suspend fun getFavoritedMovies(): Flow<Resource<List<Movie>>>
     suspend fun getMovieDetail(id: Int): Flow<Resource<Movie>>
     suspend fun getMovieReviews(movieId: Int): Flow<Resource<List<Review>>>
-    suspend fun getSearchResult(query: String): Flow<Resource<List<Movie>>>
+    suspend fun getSearchResult(query: String): Flow<PagingData<Movie>>
     suspend fun updateMovieState(movie: Movie, newState: Boolean)
 }
