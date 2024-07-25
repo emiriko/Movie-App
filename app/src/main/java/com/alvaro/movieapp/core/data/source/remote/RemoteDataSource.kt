@@ -87,9 +87,9 @@ class RemoteDataSource @Inject constructor(
         )
     }
     
-    suspend fun getMovieReviews(movieId: Int): Flow<Resource<List<ReviewItem>>> {
+    suspend fun getMovieReviews(movieId: Int, page: Int): Flow<Resource<List<ReviewItem>>> {
         return fetchMovies(
-            apiCall = { apiService.getMovieReviews(movieId) },
+            apiCall = { apiService.getMovieReviews(movieId, page) },
             transform = { it.results }
         )
     }

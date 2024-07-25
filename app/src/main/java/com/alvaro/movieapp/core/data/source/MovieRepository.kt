@@ -157,20 +157,13 @@ class MovieRepository @Inject constructor(
         override fun shouldFetch(data: Movie?): Boolean = true
     }.asFlow()
 
-    override suspend fun getMovieReviews(movieId: Int): Flow<Resource<List<Review>>> =
-        flow {
-            emit(Resource.Loading())
-            when (val response = remoteDataSource.getMovieReviews(movieId).first()) {
-                is Resource.Success -> {
-                    emit(Resource.Success(DataMapper.movieReviewResponseToReviewDomain(response.data)))
-                }
-                is Resource.Error -> {
-                    emit(Resource.Error(response.error))
-                }
-                else -> Unit
-            }
-        }
-
+    override suspend fun getMovieReviews(movieId: Int): Flow<PagingData<Review>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { ReviewPagingSource(remoteDataSource, movieId) }
+        ).flow
+    }
+    
     override suspend fun getFavoritedMovies(): Flow<Resource<List<Movie>>> = flow {
         emit(Resource.Loading())
         try {

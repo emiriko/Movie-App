@@ -20,12 +20,12 @@ class MovieInteractor @Inject constructor(
     override suspend fun getUpcomingMoviesUseCase(): Flow<PagingData<Movie>> = repository.getUpcomingMovies()
 
     override suspend fun getSearchResult(query: String): Flow<PagingData<Movie>> = repository.getSearchResult(query)
+    
+    override suspend fun getMovieReviews(movieId: Int): Flow<PagingData<Review>> = repository.getMovieReviews(movieId)
 
     override suspend fun getFavoritedMoviesUseCase(): Flow<Resource<List<Movie>>> = repository.getFavoritedMovies()
     
     override suspend fun getMovieInformation(movieId: Int): Flow<Resource<Movie>> = repository.getMovieDetail(movieId)
-
-    override suspend fun getMovieReviews(movieId: Int): Flow<Resource<List<Review>>> = repository.getMovieReviews(movieId)
     
     override suspend fun updateMovieState(movie: Movie, newState: Boolean) = repository.updateMovieState(movie, newState)
 }

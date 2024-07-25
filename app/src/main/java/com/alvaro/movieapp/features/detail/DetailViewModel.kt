@@ -3,6 +3,8 @@ package com.alvaro.movieapp.features.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.model.Review
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
@@ -12,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,11 +58,13 @@ class DetailViewModel @Inject constructor (
             apiCall = { getMovieInformation(movieId) },
             updateState = ::updateMovieInformationState
         )
-        getData(
-            movieId = movieId,
-            apiCall = { getMovieReviews(movieId) },
-            updateState = ::updateMovieReviewsState
-        )
+        viewModelScope.launch { 
+            updateMovieReviewsState(
+                getMovieReviews(movieId)
+                    .distinctUntilChanged()
+                    .cachedIn(viewModelScope)
+            )
+        }
     }
     
     fun updateMovieState(movie: Movie, newState: Boolean) {
@@ -76,7 +82,7 @@ class DetailViewModel @Inject constructor (
         )
     }
 
-    private fun updateMovieReviewsState(resource: Resource<List<Review>>) {
+    private fun updateMovieReviewsState(resource: Flow<PagingData<Review>>) {
         _movieDetailState.value = _movieDetailState.value.copy(
             reviews = resource
         )

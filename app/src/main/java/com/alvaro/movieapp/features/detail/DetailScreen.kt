@@ -43,14 +43,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.model.Review
 import com.alvaro.movieapp.core.presentation.state.MovieDetailState
 import com.alvaro.movieapp.core.presentation.state.Resource
 import com.alvaro.movieapp.features.ui.composables.CastItem
 import com.alvaro.movieapp.features.ui.composables.Image
+import com.alvaro.movieapp.features.ui.composables.PagingResourceHandler
 import com.alvaro.movieapp.features.ui.composables.ResourceHandler
 import com.alvaro.movieapp.features.ui.composables.ReviewItem
+import com.alvaro.movieapp.features.ui.composables.ReviewNotFound
 import com.alvaro.movieapp.features.ui.composables.ShowcaseItem
 import com.alvaro.movieapp.features.ui.composables.TabMenu
 import com.alvaro.movieapp.features.ui.navigation.ProvideAppBarAction
@@ -63,6 +68,7 @@ import com.alvaro.movieapp.utils.Helper
 import com.alvaro.movieapp.utils.getTMDBImageURL
 import com.alvaro.movieapp.utils.getTMDBOriginalImageURL
 import io.eyram.iconsax.IconSax
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun DetailScreen(
@@ -133,7 +139,7 @@ fun DetailScreen(
                             .offset(y = (-60).dp)
                     )
                     1 -> ReviewSection(
-                        reviewState = state.reviews,
+                        reviewState = state.reviews.collectAsLazyPagingItems(),
                         gridState = gridState,
                         modifier = Modifier
                             .offset(y = (-60).dp)
@@ -304,27 +310,41 @@ fun AboutSection(
 
 @Composable
 fun ReviewSection(
-    reviewState: Resource<List<Review>>,
+    reviewState: LazyPagingItems<Review>,
     gridState: LazyGridState,
     modifier: Modifier = Modifier
 ) {
-    ResourceHandler(
-        resource = reviewState,
-        content = { reviews ->
-            LazyVerticalGrid (
-                columns = GridCells.Fixed(1),
-                modifier = modifier,
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                state = gridState,
-                verticalArrangement = Arrangement.spacedBy(15.dp)
-            ) {
-                items(reviews) { review ->
-                    ReviewItem(
-                        image = review.image,
-                        rating = review.rating,
-                        name = review.subject,
-                        review = review.review
-                    )
+    PagingResourceHandler(
+        resource = reviewState, 
+        content = { reviews, appendState ->
+            if (reviews.itemCount > 0) {
+                LazyVerticalGrid (
+                    columns = GridCells.Fixed(1),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    state = gridState,
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    items(reviews.itemCount) { index ->
+                        val review = reviews[index] ?: return@items
+                        ReviewItem(
+                            image = review.image,
+                            rating = review.rating,
+                            name = review.subject,
+                            review = review.review
+                        )
+                    }
+                    item {
+                        appendState()
+                    }
+                }   
+            } else {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    ReviewNotFound()
                 }
             }
         },
@@ -363,28 +383,11 @@ fun DetailScreenPreview() {
         DetailScreen(
             state = MovieDetailState(
                 movie = Resource.Success(movies.first()),
-                reviews = Resource.Success(reviews),
+                reviews = flowOf(PagingData.from(reviews)),
             ),
 
             onFavoriteIconClicked = {
                     _, _ -> Unit
-            }
-        )
-    }
-}
-
-@Preview
-@Composable
-fun DetailScreenLoadingPreview() {
-    MovieAppTheme {
-        val movies = Helper.getMovies()
-        DetailScreen(
-            state = MovieDetailState(
-                movie = Resource.Success(movies.first()),
-                reviews = Resource.Loading()
-            ),
-            onFavoriteIconClicked = {
-                _, _ ->
             }
         )
     }
