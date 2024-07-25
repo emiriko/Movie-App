@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,14 +38,17 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.alvaro.movieapp.features.ui.composables.ErrorIndicator
 import com.alvaro.movieapp.features.ui.composables.Image
+import com.alvaro.movieapp.features.ui.composables.PagingResourceHandler
 import com.alvaro.movieapp.features.ui.composables.ResourceHandler
 import com.alvaro.movieapp.features.ui.composables.TabMenu
 import com.alvaro.movieapp.utils.getTMDBImageURL
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun HomeScreen(
@@ -64,7 +66,7 @@ fun HomeScreen(
             .fillMaxSize(),
     ) {
         PopularMovie(
-            popularMovies = movieState.popularMoviesState,
+            popularMovies = movieState.popularMoviesState.collectAsLazyPagingItems(),
             onClickItem = onClickItem
         )
         Spacer(modifier = Modifier.height(64.dp))
@@ -82,11 +84,11 @@ fun HomeScreen(
         
         CategoryMovies(
             state = when (tabIndex) {
-                0 -> movieState.nowPlayingMoviesState
-                1 -> movieState.popularMoviesState
-                2 -> movieState.topRatedMoviesState
-                3 -> movieState.getUpcomingMoviesState
-                else -> Resource.Error("An error occurred")
+                0 -> movieState.nowPlayingMoviesState.collectAsLazyPagingItems()
+                1 -> movieState.popularMoviesState.collectAsLazyPagingItems()
+                2 -> movieState.topRatedMoviesState.collectAsLazyPagingItems()
+                3 -> movieState.upcomingMoviesState.collectAsLazyPagingItems()
+                else -> movieState.nowPlayingMoviesState.collectAsLazyPagingItems()
             },
             gridState = gridState,
             onClickItem = onClickItem,
@@ -96,7 +98,7 @@ fun HomeScreen(
 
 @Composable
 fun CategoryMovies(
-    state: Resource<List<Movie>>,
+    state: LazyPagingItems<Movie>,
     gridState: LazyGridState,
     onClickItem: (Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -104,9 +106,9 @@ fun CategoryMovies(
     Box(
         modifier = modifier
     ) {
-        ResourceHandler(
+        PagingResourceHandler(
             resource = state, 
-            content = { movies ->
+            content = { items, appendState ->
                 LazyVerticalGrid(
                     state = gridState,
                     columns = GridCells.Adaptive(minSize = 105.dp),
@@ -114,7 +116,8 @@ fun CategoryMovies(
                     horizontalArrangement = Arrangement.spacedBy(13.dp),
                     contentPadding = PaddingValues(bottom = 20.dp),
                 ) {
-                    items(movies) { movie ->
+                    items(items.itemCount) { index ->
+                        val movie = state[index] ?: return@items
                         Image(
                             image = movie.image.getTMDBImageURL(),
                             contentDescription = movie.title,
@@ -129,6 +132,15 @@ fun CategoryMovies(
                                 }
                         )
                     }
+                    item {
+                        Column (
+                            modifier = Modifier.matchParentSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            appendState()
+                        }
+                    }
                 }
             }
         )
@@ -138,7 +150,7 @@ fun CategoryMovies(
 @Composable
 fun MoviesHighlightLayout(
     title: String,
-    state: Resource<List<Movie>>,
+    state: LazyPagingItems<Movie>,
     onClickItem: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -153,22 +165,27 @@ fun MoviesHighlightLayout(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
-
-        ResourceHandler(
-            resource = state, 
-            content = { movies ->
-                LazyRow (
+        
+        PagingResourceHandler(
+            resource = state,
+            content = { items, appendState ->
+                LazyRow(
                     contentPadding = PaddingValues(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    items(movies.size) { index ->
-                        MovieHighlight(
-                            id = movies[index].id,
-                            movie = movies[index].title,
-                            image = movies[index].image,
-                            number =  index + 1,
-                            onClickItem = onClickItem
-                        )
+                    items(items.itemCount) { index ->
+                        items[index]?.let {
+                            MovieHighlight(
+                                id = it.id,
+                                movie = it.title,
+                                image = it.image,
+                                number = index + 1,
+                                onClickItem = onClickItem
+                            )
+                        }
+                    }
+                    item {
+                        appendState()
                     }
                 }
             },
@@ -185,7 +202,7 @@ fun MoviesHighlightLayout(
                     )
                 }
             },
-            errorContent = {error ->
+            errorContent = { error, onClick ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -193,7 +210,9 @@ fun MoviesHighlightLayout(
                     contentAlignment = Alignment.Center
                 ) {
                     ErrorIndicator(
-                        message = error
+                        message = error,
+                        retriable = true,
+                        onRetryClick = onClick
                     )
                 }
             }
@@ -203,7 +222,7 @@ fun MoviesHighlightLayout(
 
 @Composable
 fun PopularMovie(
-    popularMovies: Resource<List<Movie>>,
+    popularMovies: LazyPagingItems<Movie>,
     modifier: Modifier = Modifier,
     onClickItem: (Int) -> Unit,
 ) {
@@ -225,46 +244,10 @@ fun HomeScreenPreview() {
     MovieAppTheme {
         HomeScreen(
             movieState = MovieState(
-                nowPlayingMoviesState = Resource.Success(Helper.getMovies()),
-                popularMoviesState = Resource.Success(Helper.getMovies()),
-                topRatedMoviesState = Resource.Success(Helper.getMovies()),
-                getUpcomingMoviesState = Resource.Success(Helper.getMovies()),
-            ),
-            onClickItem = {},
-            modifier = Modifier
-                .padding(16.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun HomeScreenLoadingPreview() {
-    MovieAppTheme {
-        HomeScreen(
-            movieState = MovieState(
-                nowPlayingMoviesState = Resource.Loading(),
-                popularMoviesState = Resource.Loading(),
-                topRatedMoviesState = Resource.Loading(),
-                getUpcomingMoviesState = Resource.Loading(),
-            ),
-            onClickItem = {},
-            modifier = Modifier
-                .padding(16.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun HomeScreenErrorPreview() {
-    MovieAppTheme {
-        HomeScreen(
-            movieState = MovieState(
-                nowPlayingMoviesState = Resource.Error("An error occurred"),
-                popularMoviesState = Resource.Error("An error occurred"),
-                topRatedMoviesState = Resource.Error("An error occurred"),
-                getUpcomingMoviesState = Resource.Error("An error occurred"),
+                nowPlayingMoviesState = flowOf(PagingData.from(Helper.getMovies())),
+                popularMoviesState = flowOf(PagingData.from(Helper.getMovies())),
+                topRatedMoviesState = flowOf(PagingData.from(Helper.getMovies())),
+                upcomingMoviesState = flowOf(PagingData.from(Helper.getMovies())),
             ),
             onClickItem = {},
             modifier = Modifier

@@ -1,6 +1,9 @@
 package com.alvaro.movieapp.core.data.source
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.alvaro.movieapp.core.data.source.local.LocalDataSource
 import com.alvaro.movieapp.core.data.source.local.entity.MovieEntity
 import com.alvaro.movieapp.core.data.source.remote.RemoteDataSource
@@ -60,40 +63,34 @@ class MovieRepository @Inject constructor(
 
         override fun shouldFetch(data: List<Movie>?): Boolean = true // Always fetch from remote
     }.asFlow()
-    
-    override suspend fun getNowPlayingMovies(): Flow<Resource<List<Movie>>> 
-        = getMovies (
-            createCall = { 
-                remoteDataSource.getNowPlayingMovies()
-            },
-            saveCallResult = {
-                insertMovieToDatabase(it)
-            }
-        )
-        
-    override suspend fun getPopularMovies(): Flow<Resource<List<Movie>>>
-            = getMovies (
-                createCall = { remoteDataSource.getPopularMovies() },
-                saveCallResult = {
-                    insertMovieToDatabase(it)
-                }
-            )
 
-    override suspend fun getTopRatedMovies(): Flow<Resource<List<Movie>>>
-        = getMovies (
-            createCall = { remoteDataSource.getTopRatedMovies() },
-            saveCallResult = {
-                insertMovieToDatabase(it)
-            }
-        )
+    override suspend fun getNowPlayingMovies(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.NOW_PLAYING) }
+        ).flow
+    }
 
-    override suspend fun getUpcomingMovies(): Flow<Resource<List<Movie>>>
-        = getMovies (
-            createCall = { remoteDataSource.getUpcomingMovies() },
-            saveCallResult = {
-                insertMovieToDatabase(it)
-            }
-        )
+    override suspend fun getPopularMovies(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.POPULAR) }
+        ).flow
+    }
+
+    override suspend fun getTopRatedMovies(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.TOP_RATED) }
+        ).flow
+    }
+
+    override suspend fun getUpcomingMovies(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.UPCOMING) }
+        ).flow
+    }
 
     override suspend fun getMovieDetail(id: Int): Flow<Resource<Movie>> = object : NetworkBoundResource<MovieDetailResponse, Movie>() {
         override fun loadFromDB(): Flow<Movie> {

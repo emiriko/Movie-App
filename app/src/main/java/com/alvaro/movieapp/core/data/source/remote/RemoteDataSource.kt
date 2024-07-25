@@ -36,7 +36,9 @@ class RemoteDataSource @Inject constructor(
         emit(result)
     }
     
-    suspend fun getNowPlayingMovies(): Flow<Resource<List<MovieItem>>> {
+    suspend fun getNowPlayingMovies(
+        page: Int
+    ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
             apiCall = { apiService.getNowPlayingMovies() },
             transform = { it.results }
@@ -44,21 +46,27 @@ class RemoteDataSource @Inject constructor(
     }
 
 
-    suspend fun getPopularMovies(): Flow<Resource<List<MovieItem>>> {
+    suspend fun getPopularMovies(
+        page: Int
+    ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
             apiCall = { apiService.getPopularMovies() },
             transform = { it.results }
         )
     }
 
-    suspend fun getTopRatedMovies(): Flow<Resource<List<MovieItem>>> {
+    suspend fun getTopRatedMovies(
+        page: Int
+    ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
             apiCall = { apiService.getTopRatedMovies() },
             transform = { it.results }
         )
     }
 
-    suspend fun getUpcomingMovies(): Flow<Resource<List<MovieItem>>> {
+    suspend fun getUpcomingMovies(
+        page: Int
+    ): Flow<Resource<List<MovieItem>>> {
         return fetchMovies(
             apiCall = { apiService.getUpcomingMovies() },
             transform = { it.results }

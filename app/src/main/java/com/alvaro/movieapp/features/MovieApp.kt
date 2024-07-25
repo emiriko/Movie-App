@@ -92,7 +92,7 @@ fun MovieApp(
                 
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val movieState by homeViewModel.movieState.collectAsState()
-                
+
                 HomeScreen(
                     movieState = movieState,
                     onClickItem = {movieId ->

@@ -2,14 +2,20 @@ package com.alvaro.movieapp.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
 import com.alvaro.movieapp.core.presentation.state.MovieState
 import com.alvaro.movieapp.core.presentation.state.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val movieUseCase: MovieUseCase
 ): ViewModel() {
     
-    val _movieState = MutableStateFlow(MovieState())
+    private val _movieState = MutableStateFlow(MovieState())
     val movieState
         get() = _movieState
 
@@ -34,14 +40,15 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchMovieData(
-        useCase: suspend () -> Flow<Resource<List<Movie>>>,
-        updateState: (Resource<List<Movie>>) -> Unit
+        useCase: suspend () -> Flow<PagingData<Movie>>,
+        updateState: (Flow<PagingData<Movie>>) -> Unit
     ) {
         viewModelScope.launch {
-            updateState(Resource.Loading())
-            useCase().collectLatest { result ->
-                updateState(result)
-            }
+            updateState(
+                useCase()
+                    .distinctUntilChanged()
+                    .cachedIn(viewModelScope)
+            )
         }
     }
 
@@ -50,19 +57,19 @@ class HomeViewModel @Inject constructor(
     private suspend fun getTopRatedMoviesUseCase() = movieUseCase.getTopRatedMoviesUseCase()
     private suspend fun getUpcomingMoviesUseCase() = movieUseCase.getUpcomingMoviesUseCase()
 
-    private fun updateNowPlayingMoviesState(resource: Resource<List<Movie>>) {
-        _movieState.value = _movieState.value.copy(nowPlayingMoviesState = resource)
+    private fun updateNowPlayingMoviesState(resource: Flow<PagingData<Movie>>) {
+        _movieState.update { it.copy(nowPlayingMoviesState = resource) }
     }
 
-    private fun updatePopularMoviesState(resource: Resource<List<Movie>>) {
-        _movieState.value = _movieState.value.copy(popularMoviesState = resource)
+    private fun updatePopularMoviesState(resource: Flow<PagingData<Movie>>) {
+        _movieState.update { it.copy(popularMoviesState = resource) }
     }
 
-    private fun updateTopRatedMoviesState(resource: Resource<List<Movie>>) {
-        _movieState.value = _movieState.value.copy(topRatedMoviesState = resource)
+    private fun updateTopRatedMoviesState(resource: Flow<PagingData<Movie>>) {
+        _movieState.update { it.copy(topRatedMoviesState = resource) }
     }
 
-    private fun updateUpcomingMoviesState(resource: Resource<List<Movie>>) {
-        _movieState.value = _movieState.value.copy(getUpcomingMoviesState = resource)
+    private fun updateUpcomingMoviesState(resource: Flow<PagingData<Movie>>) {
+        _movieState.update { it.copy(upcomingMoviesState = resource) }
     }
 }
