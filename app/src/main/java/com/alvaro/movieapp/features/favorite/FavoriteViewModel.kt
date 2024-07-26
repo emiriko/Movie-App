@@ -14,12 +14,12 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val movieUseCase: MovieUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow<Resource<List<Movie>>>(Resource.Loading())
-    
+
     val uiState
         get() = _uiState
-    
+
     init {
         getFavoritedMovies()
     }

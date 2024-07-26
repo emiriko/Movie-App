@@ -1,12 +1,8 @@
 package com.alvaro.movieapp.features.ui.composables
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,9 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.alvaro.movieapp.R
-import com.alvaro.movieapp.features.ui.theme.LightWhite
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
 import com.alvaro.movieapp.features.ui.theme.Subtitle
 
@@ -45,7 +39,7 @@ fun MovieNotFound(
             modifier = Modifier
                 .size(76.dp)
         )
-        Spacer(modifier =  Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = if (initial) "Search the movie you want!" else "We are sorry, we can't find the movie :(",
             style = MaterialTheme.typography.labelLarge,

@@ -10,22 +10,31 @@ import javax.inject.Inject
 
 class MovieInteractor @Inject constructor(
     private val repository: IMovieRepository
-): MovieUseCase {
-    override suspend fun getNowPlayingMoviesUseCase(): Flow<PagingData<Movie>> = repository.getNowPlayingMovies()
+) : MovieUseCase {
+    override suspend fun getNowPlayingMoviesUseCase(): Flow<PagingData<Movie>> =
+        repository.getNowPlayingMovies()
 
-    override suspend fun getPopularMoviesUseCase(): Flow<PagingData<Movie>> = repository.getPopularMovies()
+    override suspend fun getPopularMoviesUseCase(): Flow<PagingData<Movie>> =
+        repository.getPopularMovies()
 
-    override suspend fun getTopRatedMoviesUseCase(): Flow<PagingData<Movie>> = repository.getTopRatedMovies()
+    override suspend fun getTopRatedMoviesUseCase(): Flow<PagingData<Movie>> =
+        repository.getTopRatedMovies()
 
-    override suspend fun getUpcomingMoviesUseCase(): Flow<PagingData<Movie>> = repository.getUpcomingMovies()
+    override suspend fun getUpcomingMoviesUseCase(): Flow<PagingData<Movie>> =
+        repository.getUpcomingMovies()
 
-    override suspend fun getSearchResult(query: String): Flow<PagingData<Movie>> = repository.getSearchResult(query)
-    
-    override suspend fun getMovieReviews(movieId: Int): Flow<PagingData<Review>> = repository.getMovieReviews(movieId)
+    override suspend fun getSearchResult(query: String): Flow<PagingData<Movie>> =
+        repository.getSearchResult(query)
 
-    override suspend fun getFavoritedMoviesUseCase(): Flow<Resource<List<Movie>>> = repository.getFavoritedMovies()
-    
-    override suspend fun getMovieInformation(movieId: Int): Flow<Resource<Movie>> = repository.getMovieDetail(movieId)
-    
-    override suspend fun updateMovieState(movie: Movie, newState: Boolean) = repository.updateMovieState(movie, newState)
+    override suspend fun getMovieReviews(movieId: Int): Flow<PagingData<Review>> =
+        repository.getMovieReviews(movieId)
+
+    override suspend fun getFavoritedMoviesUseCase(): Flow<Resource<List<Movie>>> =
+        repository.getFavoritedMovies()
+
+    override suspend fun getMovieInformation(movieId: Int): Flow<Resource<Movie>> =
+        repository.getMovieDetail(movieId)
+
+    override suspend fun updateMovieState(movie: Movie, newState: Boolean) =
+        repository.updateMovieState(movie, newState)
 }

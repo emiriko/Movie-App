@@ -11,7 +11,7 @@ import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.model.Review
 
 
-object DataMapper{
+object DataMapper {
     fun movieResponsesToMovieEntity(movieItems: List<MovieItem>): List<MovieEntity> {
         return movieItems.map { response ->
             MovieEntity(
@@ -43,10 +43,10 @@ object DataMapper{
             )
         }
     }
-    
+
     fun movieWithCastsToMovieDomain(movieWithCasts: MovieWithCasts): Movie {
         val entity = movieWithCasts.movie
-        val casts = movieWithCasts.casts 
+        val casts = movieWithCasts.casts
         return Movie(
             id = entity.movieId,
             overview = entity.overview,
@@ -58,7 +58,7 @@ object DataMapper{
             runtime = entity.runtime,
             backdropImage = entity.backdropImage,
             isFavorite = entity.isFavorite,
-            casts = casts.map { cast -> 
+            casts = casts.map { cast ->
                 Cast(
                     name = cast.actorName,
                     image = cast.actorImage
@@ -66,7 +66,7 @@ object DataMapper{
             }
         )
     }
-    
+
     fun movieDetailResponseToMovieEntity(response: MovieDetailResponse): MovieEntity {
         return MovieEntity(
             movieId = response.id,
@@ -80,9 +80,9 @@ object DataMapper{
             backdropImage = response.backdropPath ?: "",
         )
     }
-    
+
     fun movieDetailResponseToCastEntity(response: MovieDetailResponse): List<CastEntity> {
-        return (response.credits?.cast ?: emptyList()).map { cast -> 
+        return (response.credits?.cast ?: emptyList()).map { cast ->
             CastEntity(
                 castId = cast.castId,
                 movieId = response.id,
@@ -91,9 +91,9 @@ object DataMapper{
             )
         }
     }
-    
-    fun movieReviewResponseToReviewDomain(response: List<ReviewItem>) : List<Review> {
-        return response.map { review -> 
+
+    fun movieReviewResponseToReviewDomain(response: List<ReviewItem>): List<Review> {
+        return response.map { review ->
             Review(
                 review = review.content,
                 subject = review.author,
@@ -102,7 +102,7 @@ object DataMapper{
             )
         }
     }
-    
+
     fun movieDomainToMovieEntity(movieListItem: Movie): MovieEntity {
         return MovieEntity(
             movieId = movieListItem.id,

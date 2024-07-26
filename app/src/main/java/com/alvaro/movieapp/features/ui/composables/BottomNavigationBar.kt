@@ -31,9 +31,9 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    Column (
+    Column(
         modifier = modifier
-    ){
+    ) {
         HorizontalDivider(
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier

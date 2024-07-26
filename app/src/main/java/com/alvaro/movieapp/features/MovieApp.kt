@@ -51,7 +51,7 @@ fun MovieApp(
     val currentRoute = navBackStackEntry?.destination?.route
 
     var currentTitle by remember { mutableStateOf(currentRoute) }
-    
+
     LaunchedEffect(currentRoute) {
         currentTitle = if (currentRoute == Screen.Detail.route) {
             "Detail"
@@ -59,7 +59,7 @@ fun MovieApp(
             currentRoute
         }
     }
-    
+
     Scaffold(
         topBar = {
             CustomTopAppBar(navController = navController, currentTitle)
@@ -88,13 +88,13 @@ fun MovieApp(
         ) {
             composable(Screen.Home.route) {
                 ProvideAppBarTitle(currentTitle ?: "Home")
-                
+
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val movieState by homeViewModel.movieState.collectAsState()
 
                 HomeScreen(
                     movieState = movieState,
-                    onClickItem = {movieId ->
+                    onClickItem = { movieId ->
                         navController.navigate(Screen.Detail.createRoute(movieId)) {
                             popUpTo(Screen.Home.route) {
                                 saveState = true
@@ -107,15 +107,15 @@ fun MovieApp(
                         .padding(horizontal = 24.dp),
                 )
             }
-            
+
             composable(Screen.Search.route) {
                 ProvideAppBarTitle(currentTitle ?: "Search")
 
                 val searchViewModel: SearchViewModel = hiltViewModel()
-                
+
                 val searchInput by searchViewModel.searchInput.collectAsState()
                 val searchState = searchViewModel.results.collectAsLazyPagingItems()
-                
+
                 SearchScreen(
                     state = searchState,
                     searchInput = searchInput,
@@ -137,7 +137,7 @@ fun MovieApp(
                 ProvideAppBarTitle(currentTitle ?: "Favorite")
 
                 val favoriteViewModel: FavoriteViewModel = hiltViewModel()
-                
+
                 val state by favoriteViewModel.uiState.collectAsState()
                 FavoriteScreen(
                     state = state,
@@ -160,18 +160,17 @@ fun MovieApp(
             ) {
                 val detailViewModel: DetailViewModel = hiltViewModel()
                 val detailMovieState by detailViewModel.movieDetailState.collectAsState()
-                
+
                 DetailScreen(
                     state = detailMovieState,
                     onFavoriteIconClicked = { movie, newState ->
                         detailViewModel.updateMovieState(movie, newState)
-                    } 
+                    }
                 )
             }
         }
     }
 }
-
 
 
 @Preview

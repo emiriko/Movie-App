@@ -15,20 +15,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor (
+class DetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val movieUseCase: MovieUseCase,
-): ViewModel() {
+) : ViewModel() {
     private val movieId: Int? = savedStateHandle["movieId"]
     private val _movieDetailState = MutableStateFlow(MovieDetailState())
     val movieDetailState
         get() = _movieDetailState
-    
+
     init {
         if (movieId != null) {
             getMovieDetail(movieId)
@@ -38,7 +37,7 @@ class DetailViewModel @Inject constructor (
             )
         }
     }
-    
+
     private fun <T> getData(
         movieId: Int,
         apiCall: suspend (Int) -> Flow<Resource<T>>,
@@ -51,14 +50,14 @@ class DetailViewModel @Inject constructor (
             }
         }
     }
-    
+
     private fun getMovieDetail(movieId: Int) {
         getData(
             movieId = movieId,
             apiCall = { getMovieInformation(movieId) },
             updateState = ::updateMovieInformationState
         )
-        viewModelScope.launch { 
+        viewModelScope.launch {
             updateMovieReviewsState(
                 getMovieReviews(movieId)
                     .distinctUntilChanged()
@@ -66,14 +65,16 @@ class DetailViewModel @Inject constructor (
             )
         }
     }
-    
+
     fun updateMovieState(movie: Movie, newState: Boolean) {
-        viewModelScope.launch { 
+        viewModelScope.launch {
             movieUseCase.updateMovieState(movie, newState)
         }
     }
-    
-    private suspend fun getMovieInformation(movieId: Int) = movieUseCase.getMovieInformation(movieId)
+
+    private suspend fun getMovieInformation(movieId: Int) =
+        movieUseCase.getMovieInformation(movieId)
+
     private suspend fun getMovieReviews(movieId: Int) = movieUseCase.getMovieReviews(movieId)
 
     private fun updateMovieInformationState(resource: Resource<Movie>) {

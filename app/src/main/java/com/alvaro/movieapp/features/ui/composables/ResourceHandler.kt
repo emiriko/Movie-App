@@ -24,7 +24,7 @@ fun <T> ResourceHandler(
                 modifier = Modifier
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
-        }  
+        }
     },
     errorContent: @Composable (String) -> Unit = { error ->
         Box(
@@ -43,9 +43,11 @@ fun <T> ResourceHandler(
         is Resource.Success -> {
             content(resource.data)
         }
+
         is Resource.Loading -> {
             loadingContent()
         }
+
         is Resource.Error -> {
             errorContent(resource.error)
         }

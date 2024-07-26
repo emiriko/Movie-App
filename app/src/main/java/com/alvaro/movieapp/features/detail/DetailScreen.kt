@@ -80,26 +80,26 @@ fun DetailScreen(
     var tabIndex by remember { mutableIntStateOf(0) }
 
     val tabs = listOf("About Movie", "Reviews", "Cast")
-    
+
     ResourceHandler(
         resource = state.movie,
         content = { movie ->
             ProvideAppBarTitle(movie.title)
-            var isFavorite by remember {mutableStateOf(movie.isFavorite)}
-            
+            var isFavorite by remember { mutableStateOf(movie.isFavorite) }
+
             ProvideAppBarAction {
                 IconButton(onClick = {
                     onFavoriteIconClicked(movie, !isFavorite)
                     isFavorite = !isFavorite
                 }) {
                     Icon(
-                        painter = painterResource(id = if(isFavorite) IconSax.Bold.Save2 else IconSax.Linear.Save2), 
+                        painter = painterResource(id = if (isFavorite) IconSax.Bold.Save2 else IconSax.Linear.Save2),
                         contentDescription = if (isFavorite) "Unfavorite" else "Favorite",
                         tint = Color.White
                     )
                 }
             }
-            Column (
+            Column(
                 modifier = modifier
                     .fillMaxSize(),
             ) {
@@ -119,31 +119,33 @@ fun DetailScreen(
                     modifier = Modifier
                         .offset(y = (-60).dp)
                 )
-                Spacer(modifier =  Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 TabMenu(
                     tabs = tabs,
                     tabState = gridState,
                     tabIndex = tabIndex,
-                    onTabClick = {idx ->
+                    onTabClick = { idx ->
                         tabIndex = idx
                     },
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .offset(y = (-60).dp)
                 )
-                Spacer(modifier =  Modifier.height(24.dp))
-                when(tabIndex) {
+                Spacer(modifier = Modifier.height(24.dp))
+                when (tabIndex) {
                     0 -> AboutSection(
                         overview = movie.overview,
                         modifier = Modifier
                             .offset(y = (-60).dp)
                     )
+
                     1 -> ReviewSection(
                         reviewState = state.reviews.collectAsLazyPagingItems(),
                         gridState = gridState,
                         modifier = Modifier
                             .offset(y = (-60).dp)
                     )
+
                     2 -> CastSection(
                         gridState = gridState,
                         movie = movie,
@@ -152,7 +154,7 @@ fun DetailScreen(
                     )
                 }
             }
-        } 
+        }
     )
 }
 
@@ -162,10 +164,10 @@ fun MovieBackground(
     rating: Double,
     modifier: Modifier = Modifier
 ) {
-    Box (
+    Box(
         modifier = modifier
             .fillMaxWidth()
-    ){
+    ) {
         Image(
             image = movieBackdrop.getTMDBOriginalImageURL(),
             diameter = 50.dp,
@@ -213,14 +215,14 @@ fun MovieHeader(
     moviePoster: String,
     modifier: Modifier = Modifier
 ) {
-    Row (
+    Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.Bottom,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .offset(y = (-60).dp)
-    ){
+    ) {
         Image(
             image = moviePoster.getTMDBImageURL(),
             contentDescription = "Movie Poster",
@@ -258,35 +260,35 @@ fun MovieDetail(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ShowcaseItem(
-            type = "release_date", 
-            value = releaseDate, 
+            type = "release_date",
+            value = releaseDate,
             icon = IconSax.Linear.Calendar2
         )
-        Spacer(modifier =  Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         VerticalDivider(
             color = Subtitle,
             thickness = 1.dp,
             modifier = Modifier
         )
-        Spacer(modifier =  Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         ShowcaseItem(
             type = "duration",
             value = "${duration} Minutes",
             icon = IconSax.Linear.Clock1
         )
-        Spacer(modifier =  Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         VerticalDivider(
             color = Subtitle,
             thickness = 1.dp,
             modifier = Modifier
         )
-        Spacer(modifier =  Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         ShowcaseItem(
             type = "genres",
             value = genres,
             icon = IconSax.Linear.Ticket
         )
-        Spacer(modifier =  Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(12.dp))
     }
 }
 
@@ -295,7 +297,7 @@ fun AboutSection(
     overview: String,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
@@ -315,10 +317,10 @@ fun ReviewSection(
     modifier: Modifier = Modifier
 ) {
     PagingResourceHandler(
-        resource = reviewState, 
+        resource = reviewState,
         content = { reviews, appendState ->
             if (reviews.itemCount > 0) {
-                LazyVerticalGrid (
+                LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     state = gridState,
@@ -336,7 +338,7 @@ fun ReviewSection(
                     item {
                         appendState()
                     }
-                }   
+                }
             } else {
                 Column(
                     modifier = modifier
@@ -367,13 +369,13 @@ fun CastSection(
     ) {
         items(movie.casts) { cast ->
             CastItem(
-                image = cast.image, 
+                image = cast.image,
                 name = cast.name
             )
         }
     }
 }
-        
+
 @Preview
 @Composable
 fun DetailScreenPreview() {
@@ -386,8 +388,8 @@ fun DetailScreenPreview() {
                 reviews = flowOf(PagingData.from(reviews)),
             ),
 
-            onFavoriteIconClicked = {
-                    _, _ -> Unit
+            onFavoriteIconClicked = { _, _ ->
+                Unit
             }
         )
     }

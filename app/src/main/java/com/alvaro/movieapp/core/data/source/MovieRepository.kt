@@ -1,6 +1,5 @@
 package com.alvaro.movieapp.core.data.source
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -18,7 +17,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,13 +26,14 @@ import javax.inject.Singleton
 class MovieRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-): IMovieRepository {
+) : IMovieRepository {
     private suspend fun getMovies(
         createCall: suspend () -> Flow<Resource<List<MovieItem>>>,
         saveCallResult: suspend (List<MovieItem>) -> Unit,
     ): Flow<Resource<List<Movie>>> = object : NetworkBoundResource<List<MovieItem>, List<Movie>>() {
         override fun loadFromDB(): Flow<List<Movie>> {
-            return localDataSource.getAllMovies().mapLatest { DataMapper.movieEntitiesToMovieDomain(it) }
+            return localDataSource.getAllMovies()
+                .mapLatest { DataMapper.movieEntitiesToMovieDomain(it) }
         }
 
         override suspend fun createCall(): Flow<Resource<List<MovieItem>>> =
@@ -80,82 +79,83 @@ class MovieRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getMovieDetail(id: Int): Flow<Resource<Movie>> = object : NetworkBoundResource<MovieDetailResponse, Movie>() {
-        override fun loadFromDB(): Flow<Movie> {
-            return localDataSource.getMovieById(id).mapLatest { movie ->
-                if ( movie != null ) {
-                    DataMapper.movieWithCastsToMovieDomain(movie)
-                } else {
-                    Movie(
-                        id = 0,
-                        overview = "",
-                        title = "",
-                        genres = emptyList(),
-                        image = "",
-                        releaseDate = "",
-                        voteAverage = 0.0,
-                        runtime = 0,
-                        backdropImage = "",
-                        isFavorite = false,
-                        casts = emptyList()
-                    )
+    override suspend fun getMovieDetail(id: Int): Flow<Resource<Movie>> =
+        object : NetworkBoundResource<MovieDetailResponse, Movie>() {
+            override fun loadFromDB(): Flow<Movie> {
+                return localDataSource.getMovieById(id).mapLatest { movie ->
+                    if (movie != null) {
+                        DataMapper.movieWithCastsToMovieDomain(movie)
+                    } else {
+                        Movie(
+                            id = 0,
+                            overview = "",
+                            title = "",
+                            genres = emptyList(),
+                            image = "",
+                            releaseDate = "",
+                            voteAverage = 0.0,
+                            runtime = 0,
+                            backdropImage = "",
+                            isFavorite = false,
+                            casts = emptyList()
+                        )
+                    }
                 }
             }
-        }
 
-        override suspend fun createCall(): Flow<Resource<MovieDetailResponse>> {
-           return remoteDataSource.getMovieDetail(id)
-        }
+            override suspend fun createCall(): Flow<Resource<MovieDetailResponse>> {
+                return remoteDataSource.getMovieDetail(id)
+            }
 
-        override fun useDb(): Boolean = true
+            override fun useDb(): Boolean = true
 
-        override fun MovieDetailResponse.mapResponseToDomain(): Movie {
-            return Movie(
-                id = id,
-                overview = overview ?: "No Information Provided",
-                title = title ?: "No Information Provided",
-                genres = emptyList(),
-                image = posterPath ?: "",
-                releaseDate = releaseDate ?: "No Information Provided",
-                voteAverage = voteAverage ?: 0.0,
-                runtime = runtime ?: 0,
-                backdropImage = backdropPath ?: "",
-                isFavorite = false,
-                casts = emptyList()
-            )
-        }
-
-        override suspend fun saveCallResult(data: MovieDetailResponse) {
-            var currentMovieEntity = localDataSource.getMovieEntityById(id).first()
-            
-            if (currentMovieEntity == null) {
-                currentMovieEntity = MovieEntity(
-                    movieId = id,
-                    overview = data.overview ?: "No Information Provided",
-                    title = data.title ?: "No Information Provided",
-                    genres = data.genres.map { genre -> genre.name },
-                    image = data.posterPath ?: "",
-                    releaseDate = data.releaseDate ?: "No Information Provided",
-                    voteAverage = data.voteAverage ?: 0.0,
-                    runtime = data.runtime ?: 0,
-                    backdropImage = data.backdropPath ?: "",
-                    isFavorite = false
+            override fun MovieDetailResponse.mapResponseToDomain(): Movie {
+                return Movie(
+                    id = id,
+                    overview = overview ?: "No Information Provided",
+                    title = title ?: "No Information Provided",
+                    genres = emptyList(),
+                    image = posterPath ?: "",
+                    releaseDate = releaseDate ?: "No Information Provided",
+                    voteAverage = voteAverage ?: 0.0,
+                    runtime = runtime ?: 0,
+                    backdropImage = backdropPath ?: "",
+                    isFavorite = false,
+                    casts = emptyList()
                 )
             }
-            
-            val movieEntity = DataMapper.movieDetailResponseToMovieEntity(data)
-            val castEntity = DataMapper.movieDetailResponseToCastEntity(data)
-            
-            val finalEntity = movieEntity.copy(
-                isFavorite = currentMovieEntity.isFavorite
-            )
-            
-            localDataSource.insertMovie(finalEntity)
-            localDataSource.insertCasts(castEntity)
-        }
 
-        override fun shouldFetch(data: Movie?): Boolean = true
-    }.asFlow()
+            override suspend fun saveCallResult(data: MovieDetailResponse) {
+                var currentMovieEntity = localDataSource.getMovieEntityById(id).first()
+
+                if (currentMovieEntity == null) {
+                    currentMovieEntity = MovieEntity(
+                        movieId = id,
+                        overview = data.overview ?: "No Information Provided",
+                        title = data.title ?: "No Information Provided",
+                        genres = data.genres.map { genre -> genre.name },
+                        image = data.posterPath ?: "",
+                        releaseDate = data.releaseDate ?: "No Information Provided",
+                        voteAverage = data.voteAverage ?: 0.0,
+                        runtime = data.runtime ?: 0,
+                        backdropImage = data.backdropPath ?: "",
+                        isFavorite = false
+                    )
+                }
+
+                val movieEntity = DataMapper.movieDetailResponseToMovieEntity(data)
+                val castEntity = DataMapper.movieDetailResponseToCastEntity(data)
+
+                val finalEntity = movieEntity.copy(
+                    isFavorite = currentMovieEntity.isFavorite
+                )
+
+                localDataSource.insertMovie(finalEntity)
+                localDataSource.insertCasts(castEntity)
+            }
+
+            override fun shouldFetch(data: Movie?): Boolean = true
+        }.asFlow()
 
     override suspend fun getMovieReviews(movieId: Int): Flow<PagingData<Review>> {
         return Pager(
@@ -163,7 +163,7 @@ class MovieRepository @Inject constructor(
             pagingSourceFactory = { ReviewPagingSource(remoteDataSource, movieId) }
         ).flow
     }
-    
+
     override suspend fun getFavoritedMovies(): Flow<Resource<List<Movie>>> = flow {
         emit(Resource.Loading())
         try {
@@ -181,7 +181,7 @@ class MovieRepository @Inject constructor(
             pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.SEARCH, query) }
         ).flow
     }
-    
+
     override suspend fun updateMovieState(movie: Movie, newState: Boolean) {
         val movieEntity = DataMapper.movieDomainToMovieEntity(movie)
         localDataSource.setFavoriteMovie(movieEntity, newState)

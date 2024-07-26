@@ -38,9 +38,9 @@ fun ReviewNotFound(
             modifier = Modifier
                 .size(76.dp)
         )
-        Spacer(modifier =  Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text ="No reviews found",
+            text = "No reviews found",
             style = MaterialTheme.typography.labelLarge,
             textAlign = TextAlign.Center,
             color = Color.White

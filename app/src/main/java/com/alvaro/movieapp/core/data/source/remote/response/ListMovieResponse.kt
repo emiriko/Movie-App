@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class ListMovieResponse(
     @field:SerializedName("page")
-	val page: Int,
+    val page: Int,
 
     @field:SerializedName("total_pages")
-	val totalPages: Int,
+    val totalPages: Int,
 
     @field:SerializedName("results")
-	val results: List<MovieItem>,
+    val results: List<MovieItem>,
 
     @field:SerializedName("total_results")
-	val totalResults: Int
+    val totalResults: Int
 )

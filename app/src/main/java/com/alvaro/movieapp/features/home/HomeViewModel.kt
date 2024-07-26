@@ -7,14 +7,10 @@ import androidx.paging.cachedIn
 import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
 import com.alvaro.movieapp.core.presentation.state.MovieState
-import com.alvaro.movieapp.core.presentation.state.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val movieUseCase: MovieUseCase
-): ViewModel() {
-    
+) : ViewModel() {
+
     private val _movieState = MutableStateFlow(MovieState())
     val movieState
         get() = _movieState
@@ -31,7 +27,7 @@ class HomeViewModel @Inject constructor(
     init {
         fetchMovies()
     }
-    
+
     private fun fetchMovies() {
         fetchMovieData(::getNowPlayingMoviesUseCase, ::updateNowPlayingMoviesState)
         fetchMovieData(::getPopularMoviesUseCase, ::updatePopularMoviesState)

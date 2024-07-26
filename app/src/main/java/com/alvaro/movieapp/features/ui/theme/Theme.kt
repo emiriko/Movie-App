@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -19,7 +18,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     background = Dark,
-    
+
     // Bottom Navigation
     secondaryContainer = Color.Transparent,
     onSecondaryContainer = LightBlue,
@@ -49,7 +48,7 @@ fun MovieAppTheme(
 
         else -> DarkColorScheme
     }
-    
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -60,7 +59,7 @@ fun MovieAppTheme(
     }
 
     SetSystemBarColor()
-    
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

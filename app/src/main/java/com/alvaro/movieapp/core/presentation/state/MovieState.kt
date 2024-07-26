@@ -4,7 +4,6 @@ import androidx.paging.PagingData
 import com.alvaro.movieapp.core.domain.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emptyFlow
 
 data class MovieState(
     val nowPlayingMoviesState: Flow<PagingData<Movie>> = MutableStateFlow(PagingData.empty()),

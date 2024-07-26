@@ -75,7 +75,7 @@ object Helper {
             ),
         )
     }
-    
+
     fun getReviews(): List<Review> {
         return listOf(
             Review(

@@ -1,6 +1,5 @@
 package com.alvaro.movieapp.features.search
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,12 +18,10 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.alvaro.movieapp.core.domain.model.Movie
-import com.alvaro.movieapp.core.presentation.state.Resource
 import com.alvaro.movieapp.features.ui.composables.LoadingIndicator
 import com.alvaro.movieapp.features.ui.composables.MovieInformation
 import com.alvaro.movieapp.features.ui.composables.MovieNotFound
 import com.alvaro.movieapp.features.ui.composables.PagingResourceHandler
-import com.alvaro.movieapp.features.ui.composables.ResourceHandler
 import com.alvaro.movieapp.features.ui.composables.SearchBar
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
 import com.alvaro.movieapp.utils.Helper
@@ -38,11 +35,11 @@ fun SearchScreen(
     onItemClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ConstraintLayout (
+    ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
-    ){
-        val ( searchBar, notFound, content ) = createRefs()
+    ) {
+        val (searchBar, notFound, content) = createRefs()
         SearchBar(
             searchText = searchInput,
             onSearchTextChanged = {
@@ -83,7 +80,7 @@ fun SearchScreen(
                                     }
                             )
                         }
-                        item { 
+                        item {
                             appendState()
                         }
                     }

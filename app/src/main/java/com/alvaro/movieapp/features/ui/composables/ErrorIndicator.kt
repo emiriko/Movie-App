@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,8 +31,8 @@ fun ErrorIndicator(
     retriable: Boolean = false,
     textAlign: TextAlign = TextAlign.Left,
     modifier: Modifier = Modifier,
-    ) {
-    Column (
+) {
+    Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -41,7 +40,7 @@ fun ErrorIndicator(
         Icon(
             painter = painterResource(
                 id = IconSax.Linear.Danger
-            ), 
+            ),
             contentDescription = "Error Icon",
             tint = MaterialTheme.colorScheme.errorContainer,
             modifier = Modifier.size(40.dp)
@@ -124,10 +123,10 @@ fun ErrorMessage(
 @Preview
 @Composable
 fun ErrorIndicatorPreview() {
-   MovieAppTheme {
-         ErrorIndicator(
+    MovieAppTheme {
+        ErrorIndicator(
             message = "An error occurred",
-             retriable = true
-         )
-   }
+            retriable = true
+        )
+    }
 }

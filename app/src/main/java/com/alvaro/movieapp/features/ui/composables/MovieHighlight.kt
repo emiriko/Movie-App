@@ -2,7 +2,6 @@ package com.alvaro.movieapp.features.ui.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -15,14 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import coil.compose.SubcomposeAsyncImage
 import com.alvaro.movieapp.features.ui.theme.LightBlue
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
 import com.alvaro.movieapp.utils.getTMDBImageURL
@@ -48,7 +45,7 @@ fun MovieHighlight(
                 .height(210.dp)
                 .width(150.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .clickable { 
+                .clickable {
                     onClickItem(id)
                 }
         )
@@ -66,7 +63,7 @@ fun MovieHighlight(
                         color = LightBlue,
                         fontSize = 80.sp,
                         drawStyle = Stroke(
-                            width = 2f, 
+                            width = 2f,
                             join = StrokeJoin.Round,
                         )
                     ),

@@ -1,7 +1,6 @@
 package com.alvaro.movieapp.features.ui.composables
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,11 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
 import com.alvaro.movieapp.utils.getTMDBImageURL
 import io.eyram.iconsax.IconSax
@@ -35,12 +32,12 @@ fun MovieInformation(
     releaseDate: String,
     modifier: Modifier = Modifier,
 ) {
-    Row (
+    Row(
         modifier = modifier
             .padding(vertical = 12.dp, horizontal = 24.dp)
             .height(120.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ){
+    ) {
         Image(
             image = image.getTMDBImageURL(),
             contentDescription = title,
@@ -66,12 +63,12 @@ fun MovieInformation(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Column (
+            Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 ShowcaseItem(
-                    type = "Rating Icon", 
-                    value = rating.toString(), 
+                    type = "Rating Icon",
+                    value = rating.toString(),
                     icon = IconSax.Linear.Star1,
                     highlighted = true
                 )

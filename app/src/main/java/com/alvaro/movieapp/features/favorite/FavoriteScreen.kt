@@ -25,9 +25,9 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier
 ) {
     ResourceHandler(
-        resource = state, 
+        resource = state,
         content = { movies ->
-            ConstraintLayout (
+            ConstraintLayout(
                 modifier = modifier
                     .fillMaxSize()
             ) {
@@ -67,7 +67,7 @@ fun FavoriteScreen(
                             }
                     )
                 }
-            }       
+            }
         }
     )
 }

@@ -36,11 +36,11 @@ class NetworkModule {
             .addInterceptor(apiInterceptor)
             .build()
     }
-    
+
     @Provides
     fun provideApiService(client: OkHttpClient): ApiService {
         val baseUrl: String = BuildConfig.API_BASE_URL
-        
+
         val retrofit =
             Retrofit.Builder()
                 .baseUrl(baseUrl)

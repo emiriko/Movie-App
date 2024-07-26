@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-    
+
     @Provides
     @Singleton
     fun provideDatabaseInstance(@ApplicationContext context: Context): MovieDatabase {
@@ -26,7 +26,7 @@ object DatabaseModule {
             .fallbackToDestructiveMigration()
             .build()
     }
-    
+
     @Provides
-    fun provideMovieDao(database: MovieDatabase) : MovieDao = database.movieDao()
+    fun provideMovieDao(database: MovieDatabase): MovieDao = database.movieDao()
 }

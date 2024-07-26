@@ -33,15 +33,15 @@ interface ApiService {
         @Query("query") query: String,
         @Query("page") page: Int = 1,
     ): ListMovieResponse
-    
+
     @GET("movie/{movieId}?append_to_response=credits")
     suspend fun getMovieDetail(
         @Path("movieId") id: Int,
     ): MovieDetailResponse
-    
+
     @GET("movie/{movieId}/reviews")
     suspend fun getMovieReviews(
         @Path("movieId") id: Int,
         @Query("page") page: Int = 1,
-    ) : ListMovieReviewResponse
+    ): ListMovieReviewResponse
 }

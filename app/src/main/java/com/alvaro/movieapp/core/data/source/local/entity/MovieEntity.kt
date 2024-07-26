@@ -7,14 +7,14 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 @Entity(tableName = "movies")
-data class MovieEntity (
+data class MovieEntity(
     @PrimaryKey
     @ColumnInfo(name = "movie_id")
     var movieId: Int,
 
     @ColumnInfo(name = "overview")
     var overview: String,
-    
+
     @ColumnInfo(name = "title")
     var title: String,
 
@@ -26,16 +26,16 @@ data class MovieEntity (
 
     @ColumnInfo(name = "release_date")
     var releaseDate: String,
-    
+
     @ColumnInfo(name = "vote_average")
     var voteAverage: Double,
-    
+
     @ColumnInfo(name = "runtime")
     var runtime: Int = 0,
-    
+
     @ColumnInfo(name = "backdrop_image")
     var backdropImage: String = "",
-    
+
     @ColumnInfo(name = "is_favorite")
     var isFavorite: Boolean = false
 )

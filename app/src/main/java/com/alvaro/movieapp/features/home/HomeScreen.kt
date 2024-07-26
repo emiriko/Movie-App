@@ -16,37 +16,35 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.alvaro.movieapp.core.domain.model.Movie
-import com.alvaro.movieapp.core.presentation.state.MovieState
-import com.alvaro.movieapp.core.presentation.state.Resource
-import com.alvaro.movieapp.features.ui.composables.LoadingIndicator
-import com.alvaro.movieapp.features.ui.composables.MovieHighlight
-import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
-import com.alvaro.movieapp.utils.Helper
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.alvaro.movieapp.core.domain.model.Movie
+import com.alvaro.movieapp.core.presentation.state.MovieState
 import com.alvaro.movieapp.features.ui.composables.ErrorIndicator
 import com.alvaro.movieapp.features.ui.composables.Image
+import com.alvaro.movieapp.features.ui.composables.LoadingIndicator
+import com.alvaro.movieapp.features.ui.composables.MovieHighlight
 import com.alvaro.movieapp.features.ui.composables.PagingResourceHandler
-import com.alvaro.movieapp.features.ui.composables.ResourceHandler
 import com.alvaro.movieapp.features.ui.composables.TabMenu
+import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
+import com.alvaro.movieapp.utils.Helper
 import com.alvaro.movieapp.utils.getTMDBImageURL
 import kotlinx.coroutines.flow.flowOf
 
@@ -70,18 +68,18 @@ fun HomeScreen(
             onClickItem = onClickItem
         )
         Spacer(modifier = Modifier.height(64.dp))
-        
+
         TabMenu(
             tabs = tabs,
             tabState = gridState,
             tabIndex = tabIndex,
-            onTabClick = {idx ->
+            onTabClick = { idx ->
                 tabIndex = idx
             }
         )
-        
-        Spacer(modifier =  Modifier.height(20.dp))
-        
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         CategoryMovies(
             state = when (tabIndex) {
                 0 -> movieState.nowPlayingMoviesState.collectAsLazyPagingItems()
@@ -107,7 +105,7 @@ fun CategoryMovies(
         modifier = modifier
     ) {
         PagingResourceHandler(
-            resource = state, 
+            resource = state,
             content = { items, appendState ->
                 LazyVerticalGrid(
                     state = gridState,
@@ -133,7 +131,7 @@ fun CategoryMovies(
                         )
                     }
                     item {
-                        Column (
+                        Column(
                             modifier = Modifier.matchParentSize(),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -154,7 +152,7 @@ fun MoviesHighlightLayout(
     onClickItem: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -165,7 +163,7 @@ fun MoviesHighlightLayout(
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp
         )
-        
+
         PagingResourceHandler(
             resource = state,
             content = { items, appendState ->
@@ -234,12 +232,12 @@ fun PopularMovie(
     modifier: Modifier = Modifier,
     onClickItem: (Int) -> Unit,
 ) {
-    Column (
+    Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp)
-    ){
+    ) {
         MoviesHighlightLayout(
-            title = "What do you want to watch?", 
+            title = "What do you want to watch?",
             state = popularMovies,
             onClickItem = onClickItem
         )

@@ -1,8 +1,8 @@
 package com.alvaro.movieapp.core.domain.model
 
-data class Movie (
+data class Movie(
     val id: Int,
-    
+
     val overview: String,
 
     val title: String,
@@ -13,13 +13,13 @@ data class Movie (
 
     val releaseDate: String,
 
-    val voteAverage: Double, 
-    
+    val voteAverage: Double,
+
     val runtime: Int,
-    
+
     val backdropImage: String,
-    
+
     val isFavorite: Boolean,
-    
+
     val casts: List<Cast>
 )

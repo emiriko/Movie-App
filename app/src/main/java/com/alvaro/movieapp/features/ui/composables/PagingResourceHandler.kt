@@ -3,15 +3,12 @@ package com.alvaro.movieapp.features.ui.composables
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import com.alvaro.movieapp.core.presentation.state.Resource
 
 @Composable
 fun <T : Any> PagingResourceHandler(
@@ -50,7 +47,7 @@ fun <T : Any> PagingResourceHandler(
         )
     },
     errorAppendContent: @Composable (String, () -> Unit) -> Unit = { error, onClick ->
-        Box (
+        Box(
             modifier = Modifier,
             contentAlignment = Alignment.Center
         ) {
@@ -95,5 +92,5 @@ fun <T : Any> PagingResourceHandler(
             }
         }
     }
-    
+
 }
