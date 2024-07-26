@@ -3,7 +3,12 @@ package com.alvaro.movieapp.features.ui.navigation
 import com.alvaro.movieapp.R
 import io.eyram.iconsax.IconSax
 
-sealed class NavigationItem(val route: String, val deepLinkRoute: String, val icon: Int, val labelResId: Int) {
+sealed class NavigationItem(
+    val route: String,
+    val deepLinkRoute: String,
+    val icon: Int,
+    val labelResId: Int
+) {
     data object Home : NavigationItem(
         route = Screen.Home.route,
         deepLinkRoute = "movieapp://app/home",

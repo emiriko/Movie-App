@@ -16,7 +16,11 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org/3/\"")
-        buildConfigField("String", "API_KEY", "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NjVkZDA2NDE0MGNmNDgxYTcyZjJkZjUyMTA0N2I5OCIsIm5iZiI6MTcyMTQ2MDU3Ni4yNDY2MDYsInN1YiI6IjY2OWI2NmI1MmRiNDMwMzczMzA5OWEwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Xzp30nrdFUkw10dBuvFJI3aQOxRouSoZ6FQJpiMxM9U\"")
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NjVkZDA2NDE0MGNmNDgxYTcyZjJkZjUyMTA0N2I5OCIsIm5iZiI6MTcyMTQ2MDU3Ni4yNDY2MDYsInN1YiI6IjY2OWI2NmI1MmRiNDMwMzczMzA5OWEwMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Xzp30nrdFUkw10dBuvFJI3aQOxRouSoZ6FQJpiMxM9U\""
+        )
     }
 
     buildTypes {
@@ -73,7 +77,7 @@ dependencies {
 
     ksp(libs.hiltCompiler)
     ksp(libs.androidx.roomCompiler)
-    
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

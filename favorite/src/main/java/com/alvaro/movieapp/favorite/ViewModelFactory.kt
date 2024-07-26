@@ -14,6 +14,7 @@ class ViewModelFactory @Inject constructor(private val movieUseCase: MovieUseCas
             modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
                 FavoriteViewModel(movieUseCase) as T
             }
+
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
 }

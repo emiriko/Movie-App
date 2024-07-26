@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.alvaro.movieapp.core.domain.model.Movie
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
 import com.alvaro.movieapp.core.presentation.state.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

@@ -76,7 +76,7 @@ dependencies {
     implementation(libs.androidx.activity)
 
     ksp(libs.hiltCompiler)
-    
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -43,7 +43,7 @@ fun BottomNavigationBar(
     val currentRoute = navBackStackEntry?.destination?.route
     val context = LocalContext.current as Activity
     var startActivity by remember { mutableStateOf(true) }
-    
+
     Column(
         modifier = modifier
     ) {
@@ -60,7 +60,7 @@ fun BottomNavigationBar(
                 NavigationBarItem(
                     selected = (currentRoute == item.route) || (useDeepLink && item.route == Screen.Favorite.route),
                     onClick = {
-                        if ( item.route == Screen.Favorite.route || useDeepLink ) {
+                        if (item.route == Screen.Favorite.route || useDeepLink) {
                             val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
                                 data = Uri.parse(item.deepLinkRoute)
                             }

@@ -1,8 +1,5 @@
 package com.alvaro.movieapp.features
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize

@@ -273,7 +273,7 @@ fun MovieDetail(
         Spacer(modifier = Modifier.width(12.dp))
         ShowcaseItem(
             type = "duration",
-            value = "${duration} Minutes",
+            value = "$duration Minutes",
             icon = IconSax.Linear.Clock1
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -324,7 +324,8 @@ fun ReviewSection(
                     columns = GridCells.Fixed(1),
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     state = gridState,
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = modifier
                 ) {
                     items(reviews.itemCount) { index ->
                         val review = reviews[index] ?: return@items
@@ -388,9 +389,7 @@ fun DetailScreenPreview() {
                 reviews = flowOf(PagingData.from(reviews)),
             ),
 
-            onFavoriteIconClicked = { _, _ ->
-                Unit
-            }
+            onFavoriteIconClicked = { _, _ -> }
         )
     }
 }

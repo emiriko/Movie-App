@@ -207,7 +207,7 @@ class MovieRepository @Inject constructor(
             }
         ).flow
     }
-    
+
     override suspend fun updateMovieState(movie: Movie, newState: Boolean) {
         val movieEntity = DataMapper.movieDomainToMovieEntity(movie)
         localDataSource.setFavoriteMovie(movieEntity, newState)

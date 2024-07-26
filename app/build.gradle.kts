@@ -71,7 +71,7 @@ dependencies {
     implementation(libs.lifecycleViewModelKtx)
     implementation(libs.hilt)
     implementation(libs.hiltNavigationCompose)
-    
+
     implementation(libs.retrofit)
     implementation(libs.retrofitGson)
     implementation(libs.loggingInterceptor)
@@ -83,7 +83,7 @@ dependencies {
 
     ksp(libs.hiltCompiler)
     ksp(libs.androidx.roomCompiler)
-    
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

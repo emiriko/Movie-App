@@ -1,6 +1,5 @@
 package com.alvaro.movieapp.di
 
-import com.alvaro.movieapp.core.domain.usecase.MovieInteractor
 import com.alvaro.movieapp.core.domain.usecase.MovieUseCase
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
