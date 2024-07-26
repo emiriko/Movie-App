@@ -1,4 +1,4 @@
-package com.alvaro.movieapp.features.favorite
+package com.alvaro.movieapp.favorite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val movieUseCase: MovieUseCase
 ) : ViewModel() {

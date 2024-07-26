@@ -1,5 +1,9 @@
 package com.alvaro.movieapp.features.ui.composables
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,7 +15,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,16 +29,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alvaro.movieapp.features.ui.navigation.NavigationItem
+import com.alvaro.movieapp.features.ui.navigation.Screen
 import com.alvaro.movieapp.features.ui.theme.MovieAppTheme
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    useDeepLink: Boolean = false
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
+    val context = LocalContext.current as Activity
+    var startActivity by remember { mutableStateOf(true) }
+    
     Column(
         modifier = modifier
     ) {
@@ -45,14 +58,22 @@ fun BottomNavigationBar(
         ) {
             NavigationItem.items.forEach { item ->
                 NavigationBarItem(
-                    selected = currentRoute == item.route,
+                    selected = (currentRoute == item.route) || (useDeepLink && item.route == Screen.Favorite.route),
                     onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                        if ( item.route == Screen.Favorite.route || useDeepLink ) {
+                            val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
+                                data = Uri.parse(item.deepLinkRoute)
                             }
-                            restoreState = true
-                            launchSingleTop = true
+                            deepLinkIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(deepLinkIntent)
+                        } else {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                restoreState = true
+                                launchSingleTop = true
+                            }
                         }
                     },
                     icon = {

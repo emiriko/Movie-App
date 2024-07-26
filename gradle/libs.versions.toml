@@ -26,6 +26,7 @@ iconsax = "1.0.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 annotation = "1.8.0"
+activity = "1.8.0"
 
 
 [libraries]
@@ -65,6 +66,7 @@ iconsax = { group = "io.github.being-eyram", name = "iconsax-android", version.r
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

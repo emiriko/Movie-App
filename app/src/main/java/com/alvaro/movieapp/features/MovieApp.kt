@@ -1,5 +1,8 @@
 package com.alvaro.movieapp.features
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,11 +29,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.alvaro.movieapp.features.detail.DetailScreen
 import com.alvaro.movieapp.features.detail.DetailViewModel
-import com.alvaro.movieapp.features.favorite.FavoriteScreen
-import com.alvaro.movieapp.features.favorite.FavoriteViewModel
 import com.alvaro.movieapp.features.home.HomeScreen
 import com.alvaro.movieapp.features.home.HomeViewModel
 import com.alvaro.movieapp.features.search.SearchScreen
@@ -86,7 +88,12 @@ fun MovieApp(
                 )
             },
         ) {
-            composable(Screen.Home.route) {
+            composable(
+                route = Screen.Home.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "movieapp://app/home" }
+                )
+            ) {
                 ProvideAppBarTitle(currentTitle ?: "Home")
 
                 val homeViewModel: HomeViewModel = hiltViewModel()
@@ -108,7 +115,12 @@ fun MovieApp(
                 )
             }
 
-            composable(Screen.Search.route) {
+            composable(
+                route = Screen.Search.route,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "movieapp://app/search" }
+                )
+            ) {
                 ProvideAppBarTitle(currentTitle ?: "Search")
 
                 val searchViewModel: SearchViewModel = hiltViewModel()
@@ -133,29 +145,13 @@ fun MovieApp(
                     },
                 )
             }
-            composable(Screen.Favorite.route) {
-                ProvideAppBarTitle(currentTitle ?: "Favorite")
-
-                val favoriteViewModel: FavoriteViewModel = hiltViewModel()
-
-                val state by favoriteViewModel.uiState.collectAsState()
-                FavoriteScreen(
-                    state = state,
-                    onItemClicked = { movieId ->
-                        navController.navigate(Screen.Detail.createRoute(movieId)) {
-                            popUpTo(Screen.Favorite.route) {
-                                saveState = true
-                            }
-                            restoreState = true
-                            launchSingleTop = true
-                        }
-                    },
-                )
-            }
             composable(
                 route = "${Route.Detail.name}/{movieId}",
                 arguments = listOf(
                     navArgument("movieId") { type = NavType.IntType }
+                ),
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "movieapp://app/detail/{movieId}" }
                 )
             ) {
                 val detailViewModel: DetailViewModel = hiltViewModel()

@@ -1,5 +1,6 @@
 package com.alvaro.movieapp.features.ui.navigation
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,12 +20,14 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -94,14 +97,20 @@ private class TopAppBarViewModel : ViewModel() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(navController: NavHostController, title: String?) {
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
     CenterAlignedTopAppBar(
         navigationIcon = {
             if (
-                navController.previousBackStackEntry != null
+                navController.currentBackStackEntry?.destination?.route == Screen.Detail.route
             ) {
                 IconButton(
                     onClick = {
-                        navController.popBackStack()
+                        if (navController.currentBackStackEntry != null) {
+                            navController.popBackStack()
+                        } else {
+                            backDispatcher?.onBackPressed()
+                        }
                     }
                 ) {
                     Icon(
