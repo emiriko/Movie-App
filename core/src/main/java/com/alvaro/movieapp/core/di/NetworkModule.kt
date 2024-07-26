@@ -1,6 +1,6 @@
 package com.alvaro.movieapp.core.di
 
-import com.alvaro.movieapp.BuildConfig
+import com.alvaro.movieapp.core.BuildConfig
 import com.alvaro.movieapp.core.data.source.remote.network.ApiInterceptor
 import com.alvaro.movieapp.core.data.source.remote.network.ApiService
 import dagger.Module

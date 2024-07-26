@@ -23,6 +23,9 @@ room = "2.6.1"
 ksp = "1.9.10-1.0.13"
 splash = "1.0.1"
 iconsax = "1.0.0"
+appcompat = "1.7.0"
+material = "1.12.0"
+annotation = "1.8.0"
 
 
 [libraries]
@@ -59,9 +62,14 @@ accompanistSystemuicontroller = { group = "com.google.accompanist", name = "acco
 jetpackLoading = { group = "com.ehsanmsz", name = "msz-progress-indicator", version.ref = "jetpackLoading"}
 splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
 iconsax = { group = "io.github.being-eyram", name = "iconsax-android", version.ref = "iconsax" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hiltPlugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+androidDynamicFeature = { id = "com.android.dynamic-feature", version.ref = "agp" }

@@ -54,28 +54,48 @@ class MovieRepository @Inject constructor(
     override suspend fun getNowPlayingMovies(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.NOW_PLAYING) }
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    remoteDataSource,
+                    QueryType.NOW_PLAYING
+                )
+            }
         ).flow
     }
 
     override suspend fun getPopularMovies(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.POPULAR) }
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    remoteDataSource,
+                    QueryType.POPULAR
+                )
+            }
         ).flow
     }
 
     override suspend fun getTopRatedMovies(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.TOP_RATED) }
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    remoteDataSource,
+                    QueryType.TOP_RATED
+                )
+            }
         ).flow
     }
 
     override suspend fun getUpcomingMovies(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.UPCOMING) }
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    remoteDataSource,
+                    QueryType.UPCOMING
+                )
+            }
         ).flow
     }
 
@@ -178,10 +198,16 @@ class MovieRepository @Inject constructor(
     override suspend fun getSearchResult(query: String): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviePagingSource(remoteDataSource, QueryType.SEARCH, query) }
+            pagingSourceFactory = {
+                MoviePagingSource(
+                    remoteDataSource,
+                    QueryType.SEARCH,
+                    query
+                )
+            }
         ).flow
     }
-
+    
     override suspend fun updateMovieState(movie: Movie, newState: Boolean) {
         val movieEntity = DataMapper.movieDomainToMovieEntity(movie)
         localDataSource.setFavoriteMovie(movieEntity, newState)

@@ -1,6 +1,6 @@
 package com.alvaro.movieapp.core.data.source.remote.network
 
-import com.alvaro.movieapp.BuildConfig
+import com.alvaro.movieapp.core.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
