@@ -9,7 +9,7 @@ This is a simple movie app that allows users to search for movies, view details 
 
 2. **Search page: Search for movies**
 
-|        **Search Page (with Results)**         |              **Search Page (No Results)**               |
+|      **Search Page (with Results)**       |            **Search Page (No Results)**             |
 |:-----------------------------------------:|:---------------------------------------------------:|
 | <img src="images/search.png" width="400"> | <img src="images/search_not_found.png" width="400"> |
 
@@ -19,9 +19,9 @@ This is a simple movie app that allows users to search for movies, view details 
 
 4. **Movie detail page: Display details about a movie**
 
-|                **Detail Page**                |              **Detail Page (Reviews)**               |               **Detail Page (Casts)**               |
-|:-----------------------------------------:|:------------------------------------------------:|:-----------------------------------------------:|
-| <img src="images/detail.png" width="400"> | <img src="images/detail_review.png" width="400"> | <img src="images/detail_casts.png" width="400"> |
+|              **Detail Page**              |            **Detail Page (Reviews)**             |            Detail Page (Bottom Sheet Full)            |             **Detail Page (Casts)**             |
+|:-----------------------------------------:|:------------------------------------------------:|:-----------------------------------------------------:|:-----------------------------------------------:|
+| <img src="images/detail.png" width="400"> | <img src="images/detail_review.png" width="400"> | <img src="images/detail_review_full.png" width="400"> | <img src="images/detail_casts.png" width="400"> |
 
 
 

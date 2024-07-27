@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -48,6 +49,7 @@ import com.alvaro.movieapp.utils.Helper
 import com.alvaro.movieapp.utils.getTMDBImageURL
 import kotlinx.coroutines.flow.flowOf
 
+
 @Composable
 fun HomeScreen(
     movieState: MovieState,
@@ -63,23 +65,6 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize(),
     ) {
-        PopularMovie(
-            popularMovies = movieState.popularMoviesState.collectAsLazyPagingItems(),
-            onClickItem = onClickItem
-        )
-        Spacer(modifier = Modifier.height(64.dp))
-
-        TabMenu(
-            tabs = tabs,
-            tabState = gridState,
-            tabIndex = tabIndex,
-            onTabClick = { idx ->
-                tabIndex = idx
-            }
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
         CategoryMovies(
             state = when (tabIndex) {
                 0 -> movieState.nowPlayingMoviesState.collectAsLazyPagingItems()
@@ -90,12 +75,20 @@ fun HomeScreen(
             },
             gridState = gridState,
             onClickItem = onClickItem,
+            tabIndex = tabIndex,
+            tabs = tabs,
+            onTabClicked = { tabIndex = it },
+            popularMovies = movieState.popularMoviesState.collectAsLazyPagingItems()
         )
     }
 }
 
 @Composable
 fun CategoryMovies(
+    popularMovies: LazyPagingItems<Movie>,
+    tabs: List<String>,
+    tabIndex: Int,
+    onTabClicked: (Int) -> Unit = {},
     state: LazyPagingItems<Movie>,
     gridState: LazyGridState,
     onClickItem: (Int) -> Unit,
@@ -114,6 +107,38 @@ fun CategoryMovies(
                     horizontalArrangement = Arrangement.spacedBy(13.dp),
                     contentPadding = PaddingValues(bottom = 20.dp),
                 ) {
+                    item(
+                        span = {
+                            GridItemSpan(maxLineSpan)
+                        }
+                    ) {
+                        PopularMovie(
+                            popularMovies = popularMovies,
+                            onClickItem = onClickItem
+                        )
+                    }
+
+                    item(
+                        span = {
+                            GridItemSpan(maxLineSpan)
+                        }
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    item(
+                        span = {
+                            GridItemSpan(maxLineSpan)
+                        }
+                    ) {
+                        TabMenu(
+                            tabs = tabs,
+                            tabState = gridState,
+                            tabIndex = tabIndex,
+                            onTabClick = onTabClicked
+                        )
+                    }
+
                     items(items.itemCount) { index ->
                         val movie = state[index] ?: return@items
                         Image(
